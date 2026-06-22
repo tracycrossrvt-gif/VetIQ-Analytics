@@ -10,6 +10,12 @@ import {
   calculateProjectedRevenue,
   calculateRevenueVariance,
 } from '../utils/forecasting'
+import {
+  calculatePracticeHealthScore,
+  getHealthStatus,
+} from '../utils/healthScore'
+import { useState } from 'react'
+import { getRecommendation } from '../utils/recommendations'
 
 function Dashboard() {
   const act = calculateACT(monthlyData.revenue, monthlyData.transactions)
@@ -35,25 +41,65 @@ const revenueVariance = calculateRevenueVariance(
   practiceSettings.monthlyRevenueGoal
 )
 
+const health = calculatePracticeHealthScore({
+  projectedRevenue,
+  revenueGoal: practiceSettings.monthlyRevenueGoal,
+  act,
+  actGoal: practiceSettings.actGoal,
+  hourlyLaborPercent,
+  hourlyLaborGoal: practiceSettings.hourlyLaborPercentGoal,
+  cogsPercent,
+  cogsGoal: practiceSettings.cogsPercentGoal,
+  newClients: monthlyData.newClients,
+  newClientGoal: practiceSettings.monthlyNewClientGoal,
+})
+
+const healthStatus = getHealthStatus(health.score)
+
+const [selectedKPI, setSelectedKPI] = useState('revenue')
+
+const recommendations = getRecommendation(selectedKPI, {
+  revenueVariance,
+  act,
+  actGoal: practiceSettings.actGoal,
+  hourlyLaborPercent,
+  hourlyLaborGoal: practiceSettings.hourlyLaborPercentGoal,
+  cogsPercent,
+  cogsGoal: practiceSettings.cogsPercentGoal,
+  newClients: monthlyData.newClients,
+  newClientGoal: practiceSettings.monthlyNewClientGoal,
+})
+
   return (
     <section className="dashboard">
       <p className="eyebrow">{practiceSettings.practiceName}</p>
       <h1>Practice Health Dashboard</h1>
+    <div className="health-score-card">
+  <div>
+    <p>Practice Health Score</p>
+    <h2>{health.score}/100</h2>
+  </div>
 
-      
+  <span className={`status-badge ${healthStatus}`}>
+    {healthStatus}
+  </span>
+</div>
+     
        <div className="kpi-grid">
-  <KPICard
-    title="Revenue MTD"
-    value={`$${monthlyData.revenue.toLocaleString()}`}
-    goal={`Goal: $${practiceSettings.monthlyRevenueGoal.toLocaleString()}`}
-    status="monitor"
-  />
+ <KPICard
+  title="Revenue MTD"
+  value={`$${monthlyData.revenue.toLocaleString()}`}
+  goal={`Goal: $${practiceSettings.monthlyRevenueGoal.toLocaleString()}`}
+  status="monitor"
+  onClick={() => setSelectedKPI('revenue')}
+/>
 
   <KPICard
     title="ACT"
     value={`$${act.toFixed(0)}`}
     goal={`Goal: $${practiceSettings.actGoal}`}
     status="healthy"
+    onClick={() => setSelectedKPI('act')}
   />
 
   <KPICard
@@ -61,6 +107,7 @@ const revenueVariance = calculateRevenueVariance(
     value={`${hourlyLaborPercent.toFixed(1)}%`}
     goal={`Goal: ${practiceSettings.hourlyLaborPercentGoal}%`}
     status="monitor"
+    onClick={() => setSelectedKPI('labor')}
   />
 
   <KPICard
@@ -68,6 +115,7 @@ const revenueVariance = calculateRevenueVariance(
     value={`${cogsPercent.toFixed(1)}%`}
     goal={`Goal: ${practiceSettings.cogsPercentGoal}%`}
     status="healthy"
+    onClick={() => setSelectedKPI('cogs')}
  />
 
   <KPICard
@@ -75,9 +123,124 @@ const revenueVariance = calculateRevenueVariance(
     value={monthlyData.newClients}
     goal={`Goal: ${practiceSettings.monthlyNewClientGoal}`}
     status="healthy"
+    onClick={() => setSelectedKPI('clients')}
   />
 </div> 
+<div className="drilldown-card">
+ 
+  {selectedKPI === 'revenue' && (
+  <>
+    <h3>Revenue Analysis</h3>
+    <p>
+  Score: {health.breakdown.revenue}/100
+</p>
 
+    <p>
+      Revenue is projected to finish
+      {' '}
+      ${Math.abs(revenueVariance).toLocaleString()}
+      {' '}
+      {revenueVariance < 0
+        ? 'below goal.'
+        : 'above goal.'}
+    </p>
+
+    <p>
+      Projected Revenue:
+      ${projectedRevenue.toLocaleString()}
+    </p>
+
+    <p>
+      Revenue Goal:
+      ${practiceSettings.monthlyRevenueGoal.toLocaleString()}
+    </p>
+
+    <h4>Recommended Action</h4>
+
+    <p>
+      Review appointment availability,
+      doctor utilization, and ACT opportunities
+      to improve month-end performance.
+    </p>
+  </>
+)}
+
+  {selectedKPI === 'act' && (
+    <>
+      <h3>ACT Analysis</h3>
+      <p>Score: {health.breakdown.act}/100</p>
+
+      <p>
+        Current ACT:
+        ${act.toFixed(0)}
+      </p>
+
+      <p>
+        Goal ACT:
+        ${practiceSettings.actGoal}
+      </p>
+    </>
+  )}
+
+  {selectedKPI === 'labor' && (
+    <>
+      <h3>Labor Analysis</h3>
+        <p>Score: {health.breakdown.labor}/100</p>
+      <p>
+        Hourly Labor:
+        {hourlyLaborPercent.toFixed(1)}%
+      </p>
+
+      <p>
+        Goal:
+        {practiceSettings.hourlyLaborPercentGoal}%
+      </p>
+    </>
+  )}
+
+  {selectedKPI === 'cogs' && (
+    <>
+      <h3>COGS Analysis</h3>
+       <p>Score: {health.breakdown.cogs}/100</p> 
+      <p>
+        Current COGS:
+        {cogsPercent.toFixed(1)}%
+      </p>
+
+      <p>
+        Goal:
+        {practiceSettings.cogsPercentGoal}%
+      </p>
+    </>
+  )}
+
+  {selectedKPI === 'clients' && (
+    <>
+      <h3>New Client Analysis</h3>
+       <p>Score: {health.breakdown.newClients}/100</p> 
+      <p>
+        Current:
+        {monthlyData.newClients}
+      </p>
+
+      <p>
+        Goal:
+        {practiceSettings.monthlyNewClientGoal}
+      </p>
+    </>
+  )}
+
+<div className="recommendation-list">
+  <h4>Recommended Actions</h4>
+
+  <ul>
+    {recommendations.map((recommendation) => (
+      <li key={recommendation}>{recommendation}</li>
+    ))}
+  </ul>
+</div>
+
+</div>
 <div className="forecast-card">
   <h3>Revenue Forecast</h3>
 
