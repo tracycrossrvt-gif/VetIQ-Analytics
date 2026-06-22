@@ -5,6 +5,11 @@ import {
   calculateHourlyLaborPercent,
   calculateCOGSPercent,
 } from '../utils/calculations'
+import KPICard from '../components/KPICard'
+import {
+  calculateProjectedRevenue,
+  calculateRevenueVariance,
+} from '../utils/forecasting'
 
 function Dashboard() {
   const act = calculateACT(monthlyData.revenue, monthlyData.transactions)
@@ -19,42 +24,79 @@ function Dashboard() {
     monthlyData.revenue
   )
 
+  const projectedRevenue = calculateProjectedRevenue(
+  monthlyData.revenue,
+  monthlyData.businessDaysElapsed,
+  monthlyData.totalBusinessDays
+)
+
+const revenueVariance = calculateRevenueVariance(
+  projectedRevenue,
+  practiceSettings.monthlyRevenueGoal
+)
+
   return (
     <section className="dashboard">
       <p className="eyebrow">{practiceSettings.practiceName}</p>
       <h1>Practice Health Dashboard</h1>
 
-      <div className="kpi-grid">
-        <div className="kpi-card">
-          <p>Revenue MTD</p>
-          <h2>${monthlyData.revenue.toLocaleString()}</h2>
-          <span>Goal: ${practiceSettings.monthlyRevenueGoal.toLocaleString()}</span>
-        </div>
+      
+       <div className="kpi-grid">
+  <KPICard
+    title="Revenue MTD"
+    value={`$${monthlyData.revenue.toLocaleString()}`}
+    goal={`Goal: $${practiceSettings.monthlyRevenueGoal.toLocaleString()}`}
+    status="monitor"
+  />
 
-        <div className="kpi-card">
-          <p>ACT</p>
-          <h2>${act.toFixed(0)}</h2>
-          <span>Goal: ${practiceSettings.actGoal}</span>
-        </div>
+  <KPICard
+    title="ACT"
+    value={`$${act.toFixed(0)}`}
+    goal={`Goal: $${practiceSettings.actGoal}`}
+    status="healthy"
+  />
 
-        <div className="kpi-card">
-          <p>Hourly Labor %</p>
-          <h2>{hourlyLaborPercent.toFixed(1)}%</h2>
-          <span>Goal: {practiceSettings.hourlyLaborPercentGoal}%</span>
-        </div>
+  <KPICard
+    title="Hourly Labor %"
+    value={`${hourlyLaborPercent.toFixed(1)}%`}
+    goal={`Goal: ${practiceSettings.hourlyLaborPercentGoal}%`}
+    status="monitor"
+  />
 
-        <div className="kpi-card">
-          <p>COGS %</p>
-          <h2>{cogsPercent.toFixed(1)}%</h2>
-          <span>Goal: {practiceSettings.cogsPercentGoal}%</span>
-        </div>
+  <KPICard
+    title="COGS %"
+    value={`${cogsPercent.toFixed(1)}%`}
+    goal={`Goal: ${practiceSettings.cogsPercentGoal}%`}
+    status="healthy"
+ />
 
-        <div className="kpi-card">
-          <p>New Clients</p>
-          <h2>{monthlyData.newClients}</h2>
-          <span>Goal: {practiceSettings.monthlyNewClientGoal}</span>
-        </div>
-      </div>
+  <KPICard
+    title="New Clients"
+    value={monthlyData.newClients}
+    goal={`Goal: ${practiceSettings.monthlyNewClientGoal}`}
+    status="healthy"
+  />
+</div> 
+
+<div className="forecast-card">
+  <h3>Revenue Forecast</h3>
+
+  <p>
+    Projected Revenue:
+    ${projectedRevenue.toLocaleString()}
+  </p>
+
+  <p>
+    Goal:
+    ${practiceSettings.monthlyRevenueGoal.toLocaleString()}
+  </p>
+
+  <p>
+    Variance:
+    ${revenueVariance.toLocaleString()}
+  </p>
+</div>
+      
     </section>
   )
 }

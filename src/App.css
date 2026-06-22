@@ -24,6 +24,8 @@
   color: #111827;
 }
 
+/* KPI Cards */
+
 .kpi-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -51,4 +53,65 @@
 
 .kpi-card span {
   color: #6b7280;
+}
+
+.kpi-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.status-badge.healthy {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status-badge.monitor {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-badge.action {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.forecast-card {
+  margin-top: 32px;
+  padding: 28px;
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+}
+
+.forecast-card h3 {
+  margin: 0 0 24px;
+  font-size: 24px;
+  color: #111827;
+}
+
+.forecast-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.forecast-grid p {
+  margin-bottom: 8px;
+  color: #6b7280;
+  font-weight: 700;
+}
+
+.forecast-grid strong {
+  font-size: 32px;
+  color: #111827;
 }
