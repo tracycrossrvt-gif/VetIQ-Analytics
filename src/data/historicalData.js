@@ -1,0 +1,58 @@
+const historicalData = [
+  {
+    month: 'January',
+    revenue: 108000,
+    transactions: 390,
+    hourlyLaborCost: 23800,
+    salaryLaborCost: 17500,
+    cogs: 26200,
+    newClients: 36,
+  },
+  {
+    month: 'February',
+    revenue: 114000,
+    transactions: 405,
+    hourlyLaborCost: 24400,
+    salaryLaborCost: 17500,
+    cogs: 26800,
+    newClients: 39,
+  },
+  {
+    month: 'March',
+    revenue: 119500,
+    transactions: 415,
+    hourlyLaborCost: 25100,
+    salaryLaborCost: 17500,
+    cogs: 27900,
+    newClients: 42,
+  },
+  {
+    month: 'April',
+    revenue: 123000,
+    transactions: 420,
+    hourlyLaborCost: 25700,
+    salaryLaborCost: 17500,
+    cogs: 28600,
+    newClients: 41,
+  },
+  {
+    month: 'May',
+    revenue: 126500,
+    transactions: 430,
+    hourlyLaborCost: 26300,
+    salaryLaborCost: 17500,
+    cogs: 29500,
+    newClients: 44,
+  },
+  {
+    month: 'June',
+    revenue: 106700,
+    transactions: 162,
+    hourlyLaborCost: 9800,
+    salaryLaborCost: 7200,
+    cogs: 11600,
+    newClients: 18,
+  },
+]
+
+export default historicalData

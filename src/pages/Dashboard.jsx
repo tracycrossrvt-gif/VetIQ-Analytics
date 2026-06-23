@@ -16,6 +16,12 @@ import {
 } from '../utils/healthScore'
 import { useState } from 'react'
 import { getRecommendation } from '../utils/recommendations'
+import historicalData from '../data/historicalData'
+import {
+  calculateRevenueTrend,
+  getTrendDirection,
+} from '../utils/trends'
+
 
 function Dashboard() {
   const act = calculateACT(monthlyData.revenue, monthlyData.transactions)
@@ -69,6 +75,10 @@ const recommendations = getRecommendation(selectedKPI, {
   newClients: monthlyData.newClients,
   newClientGoal: practiceSettings.monthlyNewClientGoal,
 })
+
+const revenueTrend = calculateRevenueTrend(historicalData)
+const revenueTrendDirection =
+  getTrendDirection(revenueTrend)
 
   return (
     <section className="dashboard">
@@ -155,13 +165,34 @@ const recommendations = getRecommendation(selectedKPI, {
       ${practiceSettings.monthlyRevenueGoal.toLocaleString()}
     </p>
 
-    <h4>Recommended Action</h4>
-
     <p>
-      Review appointment availability,
-      doctor utilization, and ACT opportunities
-      to improve month-end performance.
-    </p>
+  Revenue is {revenueTrendDirection} at{' '}
+  {revenueTrend}% over the last{' '}
+  {historicalData.length} months.
+</p>
+
+<p>
+  {revenueTrendDirection === 'declining' &&
+    'Revenue is trending below historical performance and may require intervention.'}
+
+  {revenueTrendDirection === 'stable' &&
+    'Revenue is relatively stable compared to recent historical performance.'}
+
+  {revenueTrendDirection === 'improving' &&
+    'Revenue growth is trending positively compared to historical performance.'}
+</p>
+
+      <h4>Revenue Trend</h4>
+
+<ul className="trend-list">
+  {historicalData.map((month) => (
+    <li key={month.month}>
+      <span>{month.month}</span>
+      <strong>${month.revenue.toLocaleString()}</strong>
+    </li>
+  ))}
+</ul>
+
   </>
 )}
 
