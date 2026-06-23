@@ -21,6 +21,8 @@ import {
   calculateRevenueTrend,
   getTrendDirection,
 } from '../utils/trends'
+import ProgressBar from '../components/ProgressBar'
+import RevenueChart from '../components/RevenueChart'
 
 
 function Dashboard() {
@@ -80,6 +82,26 @@ const revenueTrend = calculateRevenueTrend(historicalData)
 const revenueTrendDirection =
   getTrendDirection(revenueTrend)
 
+const revenueProgress = Math.round(
+  (projectedRevenue / practiceSettings.monthlyRevenueGoal) * 100
+)
+
+const actProgress = Math.round(
+  (act / practiceSettings.actGoal) * 100
+)
+
+const newClientProgress = Math.round(
+  (monthlyData.newClients / practiceSettings.monthlyNewClientGoal) * 100
+)
+
+const laborProgress = Math.round(
+  (practiceSettings.hourlyLaborPercentGoal / hourlyLaborPercent) * 100
+)
+
+const cogsProgress = Math.round(
+  (practiceSettings.cogsPercentGoal / cogsPercent) * 100
+)  
+
   return (
     <section className="dashboard">
       <p className="eyebrow">{practiceSettings.practiceName}</p>
@@ -136,6 +158,58 @@ const revenueTrendDirection =
     onClick={() => setSelectedKPI('clients')}
   />
 </div> 
+
+<div className="progress-section">
+  <h3>Goal Progress</h3>
+
+  <div className="progress-grid">
+    <ProgressBar
+      label="Revenue Goal"
+      value={`$${Math.round(projectedRevenue).toLocaleString()}`}
+      target={`$${practiceSettings.monthlyRevenueGoal.toLocaleString()}`}
+      percent={revenueProgress}
+      helper="Projected month-end revenue"
+    />
+
+    <ProgressBar
+      label="ACT Goal"
+      value={`$${act.toFixed(0)}`}
+      target={`$${practiceSettings.actGoal}`}
+      percent={actProgress}
+      helper="Current average client transaction"
+    />
+
+    <ProgressBar
+      label="New Client Goal"
+      value={monthlyData.newClients}
+      target={practiceSettings.monthlyNewClientGoal}
+      percent={newClientProgress}
+      helper="Month-to-date new clients"
+    />
+
+    <ProgressBar
+      label="Hourly Labor Target"
+      value={`${hourlyLaborPercent.toFixed(1)}%`}
+      target={`${practiceSettings.hourlyLaborPercentGoal}%`}
+      percent={laborProgress}
+      helper="Higher progress means better labor control"
+    />
+
+    <ProgressBar
+      label="COGS Target"
+      value={`${cogsPercent.toFixed(1)}%`}
+      target={`${practiceSettings.cogsPercentGoal}%`}
+      percent={cogsProgress}
+      helper="Higher progress means better COGS control"
+    />
+  </div>
+</div>
+
+<RevenueChart
+  data={historicalData}
+  goal={practiceSettings.monthlyRevenueGoal}
+/>
+
 <div className="drilldown-card">
  
   {selectedKPI === 'revenue' && (
