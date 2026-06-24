@@ -26,10 +26,21 @@ import ProgressBar from '../components/ProgressBar'
 import RevenueChart from '../components/RevenueChart'
 import DataEntryForm from '../components/DataEntryForm'
 
+const STORAGE_KEY = 'vetiq-current-month-data'
+
 function Dashboard() {
     const [selectedKPI, setSelectedKPI] = useState('revenue')
-const [currentMonthData, setCurrentMonthData] = useState(monthlyData)
-const [formData, setFormData] = useState(monthlyData)
+
+    const savedData = JSON.parse(localStorage.getItem(STORAGE_KEY))
+
+const [currentMonthData, setCurrentMonthData] = useState(
+  savedData || monthlyData
+)
+
+const [formData, setFormData] = useState(
+  savedData || monthlyData
+)
+
 function handleInputChange(event) {
   const { name, value } = event.target
 
@@ -51,6 +62,8 @@ function handleSubmit(event) {
   return
 }
   setCurrentMonthData(formData)
+
+localStorage.setItem(STORAGE_KEY, JSON.stringify(formData))
 
   setIsUpdated(true)
 
