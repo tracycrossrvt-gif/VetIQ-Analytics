@@ -22,24 +22,61 @@ import {
   getTrendDirection,
 } from '../utils/trends'
 import ProgressBar from '../components/ProgressBar'
-import RevenueChart from '../components/RevenueChart'
 
+import RevenueChart from '../components/RevenueChart'
+import DataEntryForm from '../components/DataEntryForm'
 
 function Dashboard() {
-  const act = calculateACT(monthlyData.revenue, monthlyData.transactions)
+    const [selectedKPI, setSelectedKPI] = useState('revenue')
+const [currentMonthData, setCurrentMonthData] = useState(monthlyData)
+const [formData, setFormData] = useState(monthlyData)
+function handleInputChange(event) {
+  const { name, value } = event.target
+
+   setFormData((previousData) => ({
+    ...previousData,
+    [name]: value === '' ? '' : Number(value),
+  }))
+}
+
+function handleSubmit(event) {
+  event.preventDefault()
+
+  if (
+  formData.revenue <= 0 ||
+  formData.transactions <= 0 ||
+  formData.totalBusinessDays <= 0
+) {
+  alert('Please enter valid values.')
+  return
+}
+  setCurrentMonthData(formData)
+
+  setIsUpdated(true)
+
+  setTimeout(() => {
+    setIsUpdated(false)
+  }, 2000)
+}
+
+function handleReset() {
+  setFormData(currentMonthData)
+}
+
+  const act = calculateACT(currentMonthData.revenue, currentMonthData.transactions)
 
   const hourlyLaborPercent = calculateHourlyLaborPercent(
-    monthlyData.hourlyLaborCost,
-    monthlyData.revenue
+    currentMonthData.hourlyLaborCost,
+    currentMonthData.revenue
   )
 
   const cogsPercent = calculateCOGSPercent(
-    monthlyData.cogs,
-    monthlyData.revenue
+    currentMonthData.cogs,
+    currentMonthData.revenue
   )
 
   const projectedRevenue = calculateProjectedRevenue(
-  monthlyData.revenue,
+  currentMonthData.revenue,
   monthlyData.businessDaysElapsed,
   monthlyData.totalBusinessDays
 )
@@ -58,13 +95,11 @@ const health = calculatePracticeHealthScore({
   hourlyLaborGoal: practiceSettings.hourlyLaborPercentGoal,
   cogsPercent,
   cogsGoal: practiceSettings.cogsPercentGoal,
-  newClients: monthlyData.newClients,
+  newClients: currentMonthData.newClients,
   newClientGoal: practiceSettings.monthlyNewClientGoal,
 })
 
 const healthStatus = getHealthStatus(health.score)
-
-const [selectedKPI, setSelectedKPI] = useState('revenue')
 
 const recommendations = getRecommendation(selectedKPI, {
   revenueVariance,
@@ -74,7 +109,7 @@ const recommendations = getRecommendation(selectedKPI, {
   hourlyLaborGoal: practiceSettings.hourlyLaborPercentGoal,
   cogsPercent,
   cogsGoal: practiceSettings.cogsPercentGoal,
-  newClients: monthlyData.newClients,
+  newClients: currentMonthData.newClients,
   newClientGoal: practiceSettings.monthlyNewClientGoal,
 })
 
@@ -91,7 +126,7 @@ const actProgress = Math.round(
 )
 
 const newClientProgress = Math.round(
-  (monthlyData.newClients / practiceSettings.monthlyNewClientGoal) * 100
+  (currentMonthData.newClients / practiceSettings.monthlyNewClientGoal) * 100
 )
 
 const laborProgress = Math.round(
@@ -101,6 +136,8 @@ const laborProgress = Math.round(
 const cogsProgress = Math.round(
   (practiceSettings.cogsPercentGoal / cogsPercent) * 100
 )  
+
+const [isUpdated, setIsUpdated] = useState(false)
 
   return (
     <section className="dashboard">
@@ -120,7 +157,7 @@ const cogsProgress = Math.round(
        <div className="kpi-grid">
  <KPICard
   title="Revenue MTD"
-  value={`$${monthlyData.revenue.toLocaleString()}`}
+  value={`$${currentMonthData.revenue.toLocaleString()}`}
   goal={`Goal: $${practiceSettings.monthlyRevenueGoal.toLocaleString()}`}
   status="monitor"
   onClick={() => setSelectedKPI('revenue')}
@@ -152,7 +189,7 @@ const cogsProgress = Math.round(
 
   <KPICard
     title="New Clients"
-    value={monthlyData.newClients}
+    value={currentMonthData.newClients}
     goal={`Goal: ${practiceSettings.monthlyNewClientGoal}`}
     status="healthy"
     onClick={() => setSelectedKPI('clients')}
@@ -181,7 +218,7 @@ const cogsProgress = Math.round(
 
     <ProgressBar
       label="New Client Goal"
-      value={monthlyData.newClients}
+      value={currentMonthData.newClients}
       target={practiceSettings.monthlyNewClientGoal}
       percent={newClientProgress}
       helper="Month-to-date new clients"
@@ -325,7 +362,7 @@ const cogsProgress = Math.round(
        <p>Score: {health.breakdown.newClients}/100</p> 
       <p>
         Current:
-        {monthlyData.newClients}
+        {currentMonthData.newClients}
       </p>
 
       <p>
@@ -364,6 +401,14 @@ const cogsProgress = Math.round(
     ${revenueVariance.toLocaleString()}
   </p>
 </div>
+
+<DataEntryForm
+  formData={formData}
+  onChange={handleInputChange}
+  onSubmit={handleSubmit}
+  isUpdated={isUpdated}
+  onReset={handleReset} 
+/>
       
     </section>
   )
