@@ -1,3 +1,9 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 .app {
   min-height: 100vh;
   padding: 48px;
@@ -8,6 +14,7 @@
 .dashboard {
   max-width: 1200px;
   margin: 0 auto;
+  padding: 0 24px;
 }
 
 .eyebrow {
@@ -37,6 +44,9 @@
   border-radius: 20px;
   background: #ffffff;
   box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  min-width: 0;
 }
 
 .kpi-card p {
@@ -60,6 +70,8 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  flex-wrap: wrap;
+  white-space: nowrap;
 }
 
 .status-badge {
@@ -147,11 +159,6 @@
   box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
 }
 
-.kpi-card {
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
 .kpi-card:hover {
   transform: translateY(-4px);
 }
@@ -200,6 +207,7 @@
   border-radius: 20px;
   background: #ffffff;
   box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+  min-width: 0;
 }
 
 .progress-card__header {
@@ -225,6 +233,7 @@
 .progress-card__header span {
   font-weight: 800;
   color: #2563eb;
+  font-size: 14px;
 }
 
 .progress-track {
@@ -294,26 +303,8 @@
   padding: 10px 12px;
   border: 1px solid #d1d5db;
   border-radius: 10px;
-}
-
-.data-entry-form button {
-  margin-top: 20px;
-  padding: 12px 18px;
-  border: none;
-  border-radius: 12px;
-  background: #2563eb;
-  color: white;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.data-entry-form button:hover {
-  transform: translateY(-2px);
-}
-
-.data-entry-form button:active {
-  transform: scale(0.97);
+  width: 100%;
+  min-width: 0;
 }
 
 .success-message {
@@ -353,4 +344,120 @@
 .form-actions button[type='button'] {
   background: #e5e7eb;
   color: #374151;
+}
+
+/* Responsive States */
+
+@media (max-width: 1024px) {
+  .app {
+    padding: 32px;
+  }
+
+  .kpi-grid,
+  .progress-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .form-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .kpi-grid,
+  .progress-grid,
+  .form-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .chart-card,
+  .drilldown-card,
+  .forecast-card,
+  .data-entry-form {
+    width: 100%;
+  }
+}
+
+@media (max-width: 430px) {
+  .app {
+    padding: 16px;
+  }
+
+  .dashboard {
+    padding: 0 8px;
+  }
+
+  .dashboard h1 {
+    font-size: 32px;
+    line-height: 1.05;
+  }
+
+  .health-score-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .kpi-grid,
+  .progress-grid,
+  .form-grid {
+    grid-template-columns: 1fr;
+    justify-items: stretch;
+  }
+
+  .kpi-card,
+  .progress-card,
+  .chart-card,
+  .drilldown-card,
+  .forecast-card,
+  .data-entry-form {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .data-entry-form input {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
+}
+
+.kpi-card,
+.progress-card {
+  padding: 20px;
+}
+
+.kpi-card h2,
+.progress-card__header h4 {
+  font-size: 26px;
+}
+
+.kpi-card p,
+.progress-card__header p,
+.kpi-card span,
+.progress-card small {
+  font-size: 13px;
+}
+
+.kpi-card__header,
+.progress-card__header {
+  gap: 8px;
+}
+
+.progress-card__header {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.progress-card__header span {
+  font-size: 14px;
 }

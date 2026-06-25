@@ -152,6 +152,26 @@ const cogsProgress = Math.round(
 
 const [isUpdated, setIsUpdated] = useState(false)
 
+const revenueStatus = revenueProgress >= 100 ? 'healthy' : revenueProgress >= 90 ? 'monitor' : 'action'
+
+const actStatus = actProgress >= 100 ? 'healthy' : actProgress >= 95 ? 'monitor' : 'action'
+
+const laborStatus =
+  hourlyLaborPercent <= practiceSettings.hourlyLaborPercentGoal
+    ? 'healthy'
+    : hourlyLaborPercent <= practiceSettings.hourlyLaborPercentGoal * 1.05
+      ? 'monitor'
+      : 'action'
+
+const cogsStatus =
+  cogsPercent <= practiceSettings.cogsPercentGoal
+    ? 'healthy'
+    : cogsPercent <= practiceSettings.cogsPercentGoal * 1.05
+      ? 'monitor'
+      : 'action'
+
+const newClientStatus =
+  newClientProgress >= 100 ? 'healthy' : newClientProgress >= 75 ? 'monitor' : 'action'
   return (
     <section className="dashboard">
       <p className="eyebrow">{practiceSettings.practiceName}</p>
@@ -172,7 +192,7 @@ const [isUpdated, setIsUpdated] = useState(false)
   title="Revenue MTD"
   value={`$${currentMonthData.revenue.toLocaleString()}`}
   goal={`Goal: $${practiceSettings.monthlyRevenueGoal.toLocaleString()}`}
-  status="monitor"
+  status={revenueStatus}
   onClick={() => setSelectedKPI('revenue')}
 />
 
@@ -180,7 +200,7 @@ const [isUpdated, setIsUpdated] = useState(false)
     title="ACT"
     value={`$${act.toFixed(0)}`}
     goal={`Goal: $${practiceSettings.actGoal}`}
-    status="healthy"
+    status={actStatus}
     onClick={() => setSelectedKPI('act')}
   />
 
@@ -188,7 +208,7 @@ const [isUpdated, setIsUpdated] = useState(false)
     title="Hourly Labor %"
     value={`${hourlyLaborPercent.toFixed(1)}%`}
     goal={`Goal: ${practiceSettings.hourlyLaborPercentGoal}%`}
-    status="monitor"
+    status={laborStatus}
     onClick={() => setSelectedKPI('labor')}
   />
 
@@ -196,7 +216,7 @@ const [isUpdated, setIsUpdated] = useState(false)
     title="COGS %"
     value={`${cogsPercent.toFixed(1)}%`}
     goal={`Goal: ${practiceSettings.cogsPercentGoal}%`}
-    status="healthy"
+    status={cogsStatus}
     onClick={() => setSelectedKPI('cogs')}
  />
 
@@ -204,7 +224,7 @@ const [isUpdated, setIsUpdated] = useState(false)
     title="New Clients"
     value={currentMonthData.newClients}
     goal={`Goal: ${practiceSettings.monthlyNewClientGoal}`}
-    status="healthy"
+    status={newClientStatus}
     onClick={() => setSelectedKPI('clients')}
   />
 </div> 
