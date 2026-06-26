@@ -378,8 +378,19 @@ const newClientStatus =
         {practiceSettings.monthlyNewClientGoal}
       </p>
     </>
-  )}
 
+  )}
+    {selectedKPI !== 'revenue' && (
+  <div className="recommendation-list">
+    <h4>Recommended Actions</h4>
+
+    <ul>
+      {recommendations.map((recommendation) => (
+        <li key={recommendation}>{recommendation}</li>
+      ))}
+    </ul>
+  </div>
+)}
 
 
 </div>
