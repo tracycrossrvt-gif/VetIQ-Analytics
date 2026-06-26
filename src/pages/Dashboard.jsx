@@ -26,6 +26,15 @@ import ProgressBar from '../components/ProgressBar'
 import RevenueChart from '../components/RevenueChart'
 import DataEntryForm from '../components/DataEntryForm'
 
+import doctorData from '../data/doctorData'
+import DoctorInsights from '../components/DoctorInsights'
+
+import RevenueCategoryChart from '../components/RevenueCategoryChart'
+
+import revenueCategoryData from '../data/revenueCategoryData'
+
+import Footer from '../components/Footer'
+
 const STORAGE_KEY = 'vetiq-current-month-data'
 
 function Dashboard() {
@@ -40,6 +49,7 @@ const [currentMonthData, setCurrentMonthData] = useState(
 const [formData, setFormData] = useState(
   savedData || monthlyData
 )
+
 
 function handleInputChange(event) {
   const { name, value } = event.target
@@ -239,107 +249,72 @@ const newClientStatus =
       target={`$${practiceSettings.monthlyRevenueGoal.toLocaleString()}`}
       percent={revenueProgress}
       helper="Projected month-end revenue"
+      onClick={() => setSelectedKPI('revenue')}
     />
 
     <ProgressBar
-      label="ACT Goal"
-      value={`$${act.toFixed(0)}`}
-      target={`$${practiceSettings.actGoal}`}
-      percent={actProgress}
-      helper="Current average client transaction"
+  label="ACT Goal"
+  value={`$${act.toFixed(0)}`}
+  target={`$${practiceSettings.actGoal}`}
+  percent={actProgress}
+  helper="Current average client transaction"
+  onClick={() => setSelectedKPI('act')}
+/>
+
+    <ProgressBar
+      label="Hourly Labor Goal"
+      value={`${hourlyLaborPercent.toFixed(1)}%`}
+      target={`${practiceSettings.hourlyLaborPercentGoal}%`}
+      percent={laborProgress}
+      helper="Higher progress means better labor control"
+      onClick={() => setSelectedKPI('labor')}
     />
 
     <ProgressBar
+      label="COGS Goal"
+      value={`${cogsPercent.toFixed(1)}%`}
+      target={`${practiceSettings.cogsPercentGoal}%`}
+      percent={cogsProgress}
+      helper="Higher progress means better COGS control"
+      onClick={() => setSelectedKPI('cogs')}
+/>
+
+<ProgressBar
       label="New Client Goal"
       value={currentMonthData.newClients}
       target={practiceSettings.monthlyNewClientGoal}
       percent={newClientProgress}
       helper="Month-to-date new clients"
-    />
-
-    <ProgressBar
-      label="Hourly Labor Target"
-      value={`${hourlyLaborPercent.toFixed(1)}%`}
-      target={`${practiceSettings.hourlyLaborPercentGoal}%`}
-      percent={laborProgress}
-      helper="Higher progress means better labor control"
-    />
-
-    <ProgressBar
-      label="COGS Target"
-      value={`${cogsPercent.toFixed(1)}%`}
-      target={`${practiceSettings.cogsPercentGoal}%`}
-      percent={cogsProgress}
-      helper="Higher progress means better COGS control"
+      onClick={() => setSelectedKPI('clients')}
     />
   </div>
 </div>
 
-<RevenueChart
-  data={historicalData}
-  goal={practiceSettings.monthlyRevenueGoal}
-/>
-
 <div className="drilldown-card">
  
-  {selectedKPI === 'revenue' && (
+{selectedKPI === 'revenue' && (
   <>
     <h3>Revenue Analysis</h3>
-    <p>
-  Score: {health.breakdown.revenue}/100
-</p>
 
     <p>
-      Revenue is projected to finish
-      {' '}
-      ${Math.abs(revenueVariance).toLocaleString()}
-      {' '}
-      {revenueVariance < 0
-        ? 'below goal.'
-        : 'above goal.'}
+      Revenue details have been expanded into the{' '}
+      <strong>Revenue Intelligence</strong> section below.
     </p>
 
+    <p>The Revenue Intelligence section includes:</p>
+
+    <ul>
+      <li>Revenue Forecast</li>
+      <li>Revenue Trend</li>
+      <li>Revenue Mix</li>
+      <li>Revenue Recommendations</li>
+    </ul>
+
     <p>
-      Projected Revenue:
-      ${projectedRevenue.toLocaleString()}
+      Scroll down to review the complete revenue analysis.
     </p>
-
-    <p>
-      Revenue Goal:
-      ${practiceSettings.monthlyRevenueGoal.toLocaleString()}
-    </p>
-
-    <p>
-  Revenue is {revenueTrendDirection} at{' '}
-  {revenueTrend}% over the last{' '}
-  {historicalData.length} months.
-</p>
-
-<p>
-  {revenueTrendDirection === 'declining' &&
-    'Revenue is trending below historical performance and may require intervention.'}
-
-  {revenueTrendDirection === 'stable' &&
-    'Revenue is relatively stable compared to recent historical performance.'}
-
-  {revenueTrendDirection === 'improving' &&
-    'Revenue growth is trending positively compared to historical performance.'}
-</p>
-
-      <h4>Revenue Trend</h4>
-
-<ul className="trend-list">
-  {historicalData.map((month) => (
-    <li key={month.month}>
-      <span>{month.month}</span>
-      <strong>${month.revenue.toLocaleString()}</strong>
-    </li>
-  ))}
-</ul>
-
   </>
 )}
-
   {selectedKPI === 'act' && (
     <>
       <h3>ACT Analysis</h3>
@@ -405,17 +380,81 @@ const newClientStatus =
     </>
   )}
 
+
+
+</div>
+
+<div className="revenue-intelligence-card">
+  <h3>Revenue Intelligence</h3>
+
+  <div className="revenue-intelligence-grid">
+    <div>
+      <h4>Revenue Analysis</h4>
+
+      <p>Score: {health.breakdown.revenue}/100</p>
+
+      <p>
+        Revenue is projected to finish{' '}
+        ${Math.abs(revenueVariance).toLocaleString()}{' '}
+        {revenueVariance < 0 ? 'below goal.' : 'above goal.'}
+      </p>
+
+      <p>
+        Projected Revenue: ${projectedRevenue.toLocaleString()}
+      </p>
+
+      <p>
+        Revenue Goal: ${practiceSettings.monthlyRevenueGoal.toLocaleString()}
+      </p>
+
+      <p>
+        Revenue is {revenueTrendDirection} at {revenueTrend}% over the last{' '}
+        {historicalData.length} months.
+      </p>
+    </div>
+
+    <div>
+      <h4>Revenue Forecast</h4>
+
+      <p>Projected Revenue: ${projectedRevenue.toLocaleString()}</p>
+      <p>Goal: ${practiceSettings.monthlyRevenueGoal.toLocaleString()}</p>
+      <p>Variance: ${revenueVariance.toLocaleString()}</p>
+    </div>
+  </div>
+
+  <RevenueCategoryChart categories={revenueCategoryData} />
+
+  <RevenueChart
+    data={historicalData}
+    goal={practiceSettings.monthlyRevenueGoal}
+  />
+
 <div className="recommendation-list">
   <h4>Recommended Actions</h4>
 
   <ul>
-    {recommendations.map((recommendation) => (
+    {getRecommendation('revenue', {
+      revenueVariance,
+      act,
+      actGoal: practiceSettings.actGoal,
+      hourlyLaborPercent,
+      hourlyLaborGoal: practiceSettings.hourlyLaborPercentGoal,
+      cogsPercent,
+      cogsGoal: practiceSettings.cogsPercentGoal,
+      newClients: currentMonthData.newClients,
+      newClientGoal: practiceSettings.monthlyNewClientGoal,
+    }).map((recommendation) => (
       <li key={recommendation}>{recommendation}</li>
     ))}
   </ul>
 </div>
 
 </div>
+
+
+<DoctorInsights doctors={doctorData} />
+
+
 <div className="forecast-card">
   <h3>Revenue Forecast</h3>
 
@@ -442,7 +481,7 @@ const newClientStatus =
   isUpdated={isUpdated}
   onReset={handleReset} 
 />
-      
+    <Footer />  
     </section>
   )
 }

@@ -1,6 +1,6 @@
-function ProgressBar({ label, value, target, percent, helper }) {
+function ProgressBar({ label, value, target, percent, helper, onClick }) {
   return (
-    <div className="progress-card">
+    <div className="progress-card" onClick={onClick}>
       <div className="progress-card__header">
         <div>
           <p>{label}</p>

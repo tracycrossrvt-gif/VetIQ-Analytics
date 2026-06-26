@@ -9,13 +9,19 @@ import {
 } from 'recharts'
 
 function RevenueChart({ data, goal }) {
+
+
   return (
     <div className="chart-card">
       <h3>Revenue Trend</h3>
 
-      <ResponsiveContainer width="100%" height={300}>
+      <ResponsiveContainer width="100%" aspect={2.2}>
         <LineChart data={data}>
-          <XAxis dataKey="month" />
+         <XAxis
+  dataKey="month"
+  interval="preserveStartEnd"
+  tick={{ fontSize: 12 }}
+/> 
 
          <YAxis
   tickFormatter={(value) =>
@@ -23,12 +29,12 @@ function RevenueChart({ data, goal }) {
   }
 /> 
 
-        <Tooltip
+<Tooltip
   formatter={(value) => [
     `$${value.toLocaleString()}`,
     'Revenue',
   ]}
-/>  
+/>       
 
 <ReferenceLine
   y={goal}
