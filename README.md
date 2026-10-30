@@ -1,117 +1,80 @@
 # VetIQ Analytics
 
-A modern veterinary business intelligence dashboard designed specifically for independent veterinary practices.
+**Veterinary business intelligence and decision-support dashboard**
 
-VetIQ Analytics helps practice managers monitor financial performance, identify operational trends, and make data-driven decisions through an intuitive, responsive interface.
+🌐 **[Live Demo](https://vet-iq-analytics.vercel.app/)** · 💻 **[Source Code](https://github.com/tracycrossrvt-gif/VetIQ-Analytics)**
 
----
+VetIQ Analytics is a responsive React application that helps veterinary practice leaders make sense of operational and financial performance. It brings key metrics, revenue patterns, and doctor-level insights into one interactive dashboard, with recommendations intended to help identify areas worth investigating.
+
+## Why I built it
+
+My experience leading veterinary hospital operations showed me how difficult it can be to turn separate reports and metrics into actionable decisions. I designed VetIQ around the questions practice leaders routinely ask: Are we meeting our goals? Where is revenue changing? Which performance indicators deserve attention?
+
+The aim is to make those questions easier to explore through a clear interface—not to replace professional judgment.
 
 ## Features
 
-### Practice Health Dashboard
-- Overall Practice Health Score
-- Revenue forecasting
-- KPI monitoring
-- Goal tracking
+- **Practice health overview:** composite health score, KPI cards, goal progress, and forecasting
+- **Revenue intelligence:** revenue trends, category mix, interactive charts, and recommendations
+- **Doctor insights:** production, average client transaction (ACT), transaction volume, and category breakdowns
+- **Interactive exploration:** clickable KPIs and a dynamic analysis panel
+- **Data entry:** monthly input form with validation, local persistence, and reset functionality
+- **Responsive dashboard:** layouts for desktop, tablet, and mobile screens
 
-### Revenue Intelligence
-- Revenue trend visualization
-- Revenue forecasting
-- Revenue mix donut chart
-- Automated recommendations
+## Technology
 
-### Doctor Insights
-- Individual doctor production
-- Average Client Transaction (ACT)
-- Transaction counts
-- Revenue category breakdown
-- Strengths summary
-
-### Interactive Dashboard
-- Clickable KPI cards
-- Dynamic analysis panel
-- Responsive layouts
-- Local data persistence
-
-### Data Management
-- Interactive monthly data entry
-- Form validation
-- Local Storage persistence
-- Reset functionality
-
----
-
-## Tech Stack
-
-- React
-- JavaScript (ES6+)
+- React and JavaScript (ES6+)
 - Vite
-- Recharts
+- Recharts for data visualization
 - CSS3
-- Local Storage
+- Browser `localStorage` for persistence
 
----
+## Engineering and product decisions
 
-## The Story Behind VetIQ
+- Organized metrics into a dashboard hierarchy so users can move from an overall health view to more specific operational drivers.
+- Used derived calculations and data visualizations to convert raw values into comparisons and trends.
+- Added input validation and local persistence so users can explore data without requiring an account or backend service.
+- Designed the experience around veterinary workflows and familiar practice KPIs rather than generic analytics terminology.
 
-After more than 20 years leading veterinary teams and managing hospital operations, I wanted to build a business intelligence tool designed around the metrics that veterinary leaders actually use every day.
-
-Many enterprise organizations rely on platforms such as Power BI, but independent practices often lack access to affordable, purpose-built analytics tools.
-
-VetIQ Analytics demonstrates how modern frontend technologies can transform complex business data into clear, actionable insights.
-
----
+**Scope:** This is a portfolio application with browser-local data, not a production integration with practice-management software. Forecasts, scores, and recommendations are decision-support features and should be interpreted in context.
 
 ## Screenshots
 
-![Dashboard1440px](./screenshots/dashboard1440px.png)
-![Dashboard1024px](./screenshots/dashboard1024px.png)
-![Dashboard768px](./screenshots/dashboard430px.png)
-![Dashboard430px](./screenshots/dashboard430px.png)
-![Dashboard390px](./screenshots/dashboard390px.png)
+### Desktop
+![VetIQ dashboard at 1440px](./screenshots/dashboard1440px.png)
 
+### Tablet
+![VetIQ dashboard at 1024px](./screenshots/dashboard1024px.png)
+![VetIQ dashboard at 768px](./screenshots/dashboard768px.png)
 
----
+### Mobile
+![VetIQ dashboard at 430px](./screenshots/dashboard430px.png)
+![VetIQ dashboard at 390px](./screenshots/dashboard390px.png)
 
-## Future Roadmap
+## Run locally
 
-Version 1.5
-- Practice benchmarking
-- Doctor production trends
-- Inventory analytics
-- Revenue by service category
-- Export to PDF
-- Dark mode
+```bash
+npm install
+npm run dev
+```
 
-Version 2.0
-- Cloud database
-- User authentication
-- Multi-practice support
-- PIMS integration
-- Payroll and scheduling analytics
-- AI-powered operational insights
+For code-quality and production-build checks:
 
----
+```bash
+npm run lint
+npm run build
+```
 
-## Skills Demonstrated
+## Future directions
 
-- React Component Architecture
-- State Management
-- Derived State
-- Data Visualization
-- Responsive Design
-- Local Storage
-- Form Validation
-- Business Intelligence UX
-- Product Design
-- Domain-Driven Development
+**Near-term exploration:** practice benchmarking, doctor production trends, inventory analytics, revenue by service category, exports, and visual refinements.
 
----
+**Longer-term possibilities:** cloud storage, authentication, multi-practice support, practice-management integrations, scheduling and payroll analytics, and AI-assisted operational insights.
 
-## Live Demo
+These are potential extensions, not features claimed to be complete.
 
-[Live Site](YOUR_VERCEL_URL)
+## About the developer
 
-## Repository
+**Tracy Cross** — Software Developer with a background in veterinary operations and business leadership.
 
-[GitHub Repository](YOUR_GITHUB_URL)
+[Portfolio](https://dev-portfolio-woad-seven.vercel.app/) · [LinkedIn](https://www.linkedin.com/in/tracy-cross-dev/) · [GitHub](https://github.com/tracycrossrvt-gif)
